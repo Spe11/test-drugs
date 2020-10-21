@@ -23,7 +23,7 @@ class DrugSearcher
      *
      * @return Collection
      */
-    protected function baseSearch(array $substanceIds): Collection
+    public function search(array $substanceIds): Collection
     {
         $substancesCount = count($substanceIds);
 
@@ -33,10 +33,15 @@ class DrugSearcher
             ->having(DB::raw('COUNT(substance_id)'), $substancesCount)
             ->pluck('drug_id')
         ;
-        if (false === $completeDragIds->isEmpty()) {
-            return Drug::whereIn('id', $completeDragIds)
-                ->get()
-            ;
+
+        $drugs = Drug::whereIn('id', $completeDragIds)
+            ->get()
+            ->filter(function (Drug $drug) {
+                return $drug->isVisible();
+            })
+        ;
+        if (false === $drugs->isEmpty()) {
+            return $drugs;
         }
 
         $partialDragIds = DrugSubstance::select('drug_id')
@@ -46,29 +51,19 @@ class DrugSearcher
             ->orderBy(DB::raw('COUNT(substance_id)'), 'desc')
             ->pluck('drug_id');
         ;
-        if (false === $partialDragIds->isEmpty()) {
-            $idOrder = implode(', ', $partialDragIds->toArray());
+        $idOrder = implode(', ', $partialDragIds->toArray());
 
-            return Drug::whereIn('id', $partialDragIds)
-                ->orderBy(DB::raw("FIELD(id, $idOrder)"))
-                ->get()
-            ;
+        $drugs = Drug::whereIn('id', $partialDragIds)
+            ->orderBy(DB::raw("FIELD(id, $idOrder)"))
+            ->get()
+            ->filter(function (Drug $drug) {
+                return $drug->isVisible();
+            })
+        ;
+        if (false === $drugs->isEmpty()) {
+            return $drugs;
         }
 
         return new Collection();
-    }
-
-    /**
-     * Поиск видимых лекарств
-     *
-     * @param array  $substanceIds
-     *
-     * @return Collection
-     */
-    public function search(array $substanceIds): Collection
-    {
-        return $this->baseSearch($substanceIds)->filter(function (Drug $drug) {
-            return $drug->isVisible();
-        });
     }
 }
