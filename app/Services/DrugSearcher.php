@@ -60,10 +60,7 @@ class DrugSearcher
                 return $drug->isVisible();
             })
         ;
-        if (false === $drugs->isEmpty()) {
-            return $drugs;
-        }
 
-        return new Collection();
+        return $drugs;
     }
 }
