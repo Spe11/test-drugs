@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\DrugController;
+use App\Http\Controllers\Admin\SubstanceController;
+use App\Http\Controllers\SiteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::prefix('admin')->group(function () {
+    Route::resource('/substances', SubstanceController::class);
+    Route::resource('/drugs', DrugController::class);
+    Route::get('/', AdminController::class);
 });
+
+Route::get('/', [SiteController::class, 'index']);
+Route::post('/search', [SiteController::class, 'search']);
