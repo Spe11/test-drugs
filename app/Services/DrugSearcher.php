@@ -39,6 +39,7 @@ class DrugSearcher
         $completeDrugIds = DrugSubstance::select(['drug_id'])
             ->whereIn('substance_id', $substanceIds)
             ->groupBy('drug_id')
+            ->having(DB::raw('COUNT(substance_id)'), '=',$substancesCount)
             ->pluck('drug_id')
         ;
 
