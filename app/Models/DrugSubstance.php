@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * App\Models\DrugSubstance
@@ -26,4 +27,14 @@ class DrugSubstance extends Model
     protected $table = 'drug_substance';
 
     use HasFactory;
+
+    /**
+     * Вещества
+     *
+     * @return HasOne
+     */
+    public function substances(): HasOne
+    {
+        return $this->hasOne(Substance::class);
+    }
 }

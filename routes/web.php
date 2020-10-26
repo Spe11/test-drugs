@@ -24,4 +24,4 @@ Route::prefix('admin')->group(function () {
 });
 
 Route::get('/', [SiteController::class, 'index']);
-Route::post('/search', [SiteController::class, 'search']);
+Route::get('/search', [SiteController::class, 'search']);

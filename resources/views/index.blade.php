@@ -9,7 +9,7 @@
 @section('content')
     <h1>Поиск лекарств</h1>
 
-    <form method="POST" action="/search">
+    <form method="GET" action="/search">
         <div class="col-4">
             <div class="form-group">
                 <label>Список веществ</label>
@@ -25,7 +25,7 @@
             <div class="text-danger">{{ $error }}</div>
         @endforeach
 
-        <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+
 
         <button type="submit" class="btn btn-primary">Поиск</button>
     </form>

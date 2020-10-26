@@ -33,3 +33,5 @@
         </div>
     @endif
 @endsection
+
+{{ $drugs->appends(request()->input())->links() }}
